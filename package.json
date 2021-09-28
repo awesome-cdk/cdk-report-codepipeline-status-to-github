@@ -1,15 +1,20 @@
 {
-  "name": "cdk-report-codepipeline-status-to-github",
-  "version": "0.1.0",
-  "bin": {
-    "cdk-report-codepipeline-status-to-github": "bin/cdk-report-codepipeline-status-to-github.js"
+  "name": "@awesome-cdk/cdk-report-codepipeline-status-to-github",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
   },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk"
   },
+  "files": [
+    "lib/*"
+  ],
   "devDependencies": {
     "@aws-cdk/assert": "^1.124.0",
     "@types/aws-lambda": "^8.10.83",
