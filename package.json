@@ -12,6 +12,19 @@
     "test": "jest",
     "cdk": "cdk"
   },
+  "repository": {
+    "url": "https://github.com/awesome-cdk/cdk-report-codepipeline-status-to-github"
+  },
+  "keywords": [
+    "aws-cdk",
+    "aws-codepipeline",
+    "github",
+    "github-status-api"
+  ],
+  "author": {
+    "name": "Dzhuneyt",
+    "url": "https://dzhuneyt.com"
+  },
   "files": [
     "lib/*.js",
     "lib/*.d.ts",
