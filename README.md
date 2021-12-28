@@ -13,7 +13,7 @@ reference architecture, proposed by AWS</a>, minus the SNS topic, since it's not
 
 ```typescript
 // Create your pipeline with its Stages and all other configuration, as you would normally do it
- const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {});
+const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {});
 
 // Use the construct from this package, passing a "Systems Manager - Parameter Store" where you've previously stored your GitHub "Personal Access Token"
 const githubToken = StringParameter.fromStringParameterName(this, 'GitHubToken', 'GITHUB_TOKEN');
