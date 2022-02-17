@@ -17,6 +17,7 @@ export class CodePipelinePostToGitHub extends Construct {
 
         const lambda = new NodejsFunction(this, 'NodejsFunction', {
             entry: path.resolve(__dirname, 'CodePipelinePostToGitHub.lambda.ts'),
+            projectRoot: path.resolve(__dirname, '..'),
             timeout: Duration.seconds(30),
             logRetention: RetentionDays.ONE_MONTH,
             bundling: {
