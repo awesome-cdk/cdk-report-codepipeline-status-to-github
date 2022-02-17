@@ -19,9 +19,6 @@ export class CodePipelinePostToGitHub extends Construct {
             entry: path.resolve(__dirname, 'CodePipelinePostToGitHub.lambda.ts'),
             timeout: Duration.seconds(30),
             logRetention: RetentionDays.ONE_MONTH,
-            bundling: {
-                forceDockerBundling: true,
-            }
         });
 
         // Allow the Lambda to query CodePipeline for more details on the build that triggered the event
