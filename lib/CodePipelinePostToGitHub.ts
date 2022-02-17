@@ -5,7 +5,7 @@ import {LambdaFunction} from "@aws-cdk/aws-events-targets";
 import {PolicyStatement} from "@aws-cdk/aws-iam";
 import {RetentionDays} from "@aws-cdk/aws-logs";
 import * as path from "path";
-import {IStringParameter, StringParameter} from "@aws-cdk/aws-ssm";
+import {IStringParameter} from "@aws-cdk/aws-ssm";
 
 export class CodePipelinePostToGitHub extends Construct {
 
@@ -19,6 +19,9 @@ export class CodePipelinePostToGitHub extends Construct {
             entry: path.resolve(__dirname, 'CodePipelinePostToGitHub.lambda.ts'),
             timeout: Duration.seconds(30),
             logRetention: RetentionDays.ONE_MONTH,
+            bundling: {
+                forceDockerBundling: true,
+            }
         });
 
         // Allow the Lambda to query CodePipeline for more details on the build that triggered the event
