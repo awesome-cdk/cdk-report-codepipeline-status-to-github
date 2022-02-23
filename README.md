@@ -1,5 +1,9 @@
 # Report CodePipeline build status to GitHub commit
 
+![CI status](https://github.com/awesome-cdk/cdk-report-codepipeline-status-to-github/actions/workflows/npm.yml/badge.svg)
+[![npm version](https://badge.fury.io/js/@awesome-cdk%2Fcdk-report-codepipeline-status-to-github.svg)](https://badge.fury.io/js/@awesome-cdk%2Fcdk-report-codepipeline-status-to-github)
+
+
 An AWS CDK construct that, when attached to a CodePipeline, will make sure success or failure of that pipeline is
 reflected back to GitHub and shown next to the commit.
 
