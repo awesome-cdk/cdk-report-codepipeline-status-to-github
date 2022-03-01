@@ -15,7 +15,13 @@ reference architecture, proposed by AWS</a>, minus the SNS topic, since it's not
 
 ### Quick Start
 
+```
+npm i @awesome-cdk/cdk-report-codepipeline-status-to-github
+```
+
 ```typescript
+import {CodePipelinePostToGitHub} from "@awesome-cdk/cdk-report-codepipeline-status-to-github";
+
 // Create your pipeline with its Stages and all other configuration, as you would normally do it
 const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {});
 
