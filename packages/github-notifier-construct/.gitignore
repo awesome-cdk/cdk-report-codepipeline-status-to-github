@@ -1,0 +1,11 @@
+!jest.config.js
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+!webpack.config.js
+
+*.tgz
+
+lib/*.d.ts
+lib/*.js

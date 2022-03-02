@@ -1,11 +1,11 @@
 import {Construct, Duration} from "@aws-cdk/core";
 import {IPipeline} from "@aws-cdk/aws-codepipeline";
-import {NodejsFunction} from "@aws-cdk/aws-lambda-nodejs";
+import {Code, Function, Runtime} from "@aws-cdk/aws-lambda";
 import {LambdaFunction} from "@aws-cdk/aws-events-targets";
 import {PolicyStatement} from "@aws-cdk/aws-iam";
 import {RetentionDays} from "@aws-cdk/aws-logs";
-import * as path from "path";
 import {IStringParameter} from "@aws-cdk/aws-ssm";
+import * as path from "path";
 
 export class CodePipelinePostToGitHub extends Construct {
 
@@ -15,10 +15,14 @@ export class CodePipelinePostToGitHub extends Construct {
     }) {
         super(scope, id);
 
-        const lambda = new NodejsFunction(this, 'NodejsFunction', {
-            entry: path.resolve(__dirname, 'CodePipelinePostToGitHub.lambda.ts'),
+        const lambda = new Function(this, 'Function', {
+            code: Code.fromAsset(path.resolve(__dirname, './'), {
+                exclude: ['*', '!lambda.js'],
+            }),
+            handler: 'lambda.handler',
             timeout: Duration.seconds(30),
             logRetention: RetentionDays.ONE_MONTH,
+            runtime: Runtime.NODEJS_14_X,
         });
 
         // Allow the Lambda to query CodePipeline for more details on the build that triggered the event
