@@ -28,13 +28,13 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: cd packages/githun-notifier-construct && npm ci
+        run: (cd packages/githun-notifier-construct && npm ci)
 
       - name: Build
-        run: cd packages/githun-notifier-construct && npm run build
+        run: (cd packages/githun-notifier-construct && npm run build)
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: cd packages/githun-notifier-construct && npx semantic-release
+        run: (cd packages/githun-notifier-construct && npx semantic-release)
