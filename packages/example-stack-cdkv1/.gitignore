@@ -1,4 +1,4 @@
-*.ts
+*.js
 !*.d.ts
 
 # CDK asset staging directory
