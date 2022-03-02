@@ -1,7 +1,7 @@
 import {Construct, SecretValue} from "@aws-cdk/core";
 import {Artifact, Pipeline} from "@aws-cdk/aws-codepipeline";
 import {CodeBuildAction, GitHubSourceAction} from "@aws-cdk/aws-codepipeline-actions";
-import {BuildSpec, Project} from "@aws-cdk/aws-codebuild";
+import {BuildSpec, LinuxBuildImage, Project} from "@aws-cdk/aws-codebuild";
 
 export class DummyPipeline extends Construct {
     pipeline: Pipeline;
@@ -33,6 +33,7 @@ export class DummyPipeline extends Construct {
                     input: sourceArtifact,
                     actionName: "Test",
                     project: new Project(this, 'CodeBuild/Project/Test', {
+                        environment: {buildImage: LinuxBuildImage.AMAZON_LINUX_2_ARM_2},
                         buildSpec: BuildSpec.fromObject({
                             version: '0.2',
                             phases: {
