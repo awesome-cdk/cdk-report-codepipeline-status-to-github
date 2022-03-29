@@ -1,32 +1,33 @@
 //webpack.config.js
-const nodeExternals = require('webpack-node-externals');
 const path = require("path");
 
 module.exports = {
     target: 'node',
     mode: "development",
-    devtool: "inline-source-map",
-    context: path.resolve(__dirname, 'lib'),
+    devtool: "inline-cheap-module-source-map",
     entry: {
-        'lambda': "./lambda.ts",
+        'lambda': "./lib/lambda.ts",
     },
     output: {
         filename: '[name].js',
-        path: __dirname + '/lib',
+        path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js"],
+        extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.json'],
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.(ts|js)x?$/,
                 loader: "ts-loader"
             }
         ]
     },
     externalsPresets: {node: true}, // in order to ignore built-in modules like path, fs, etc.
-    externals: [nodeExternals({
-        allowlist: ['axios'],
-    })], // in order to ignore all modules in node_modules folder
+    // externals: [
+    //     'aws-sdk',
+    //     nodeExternals({
+    //         allowlist: ['axios', 'follow-redirects'],
+    //     }),
+    // ], // in order to ignore all modules in node_modules folder
 };

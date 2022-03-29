@@ -16,9 +16,7 @@ export class CodePipelinePostToGitHub extends Construct {
         super(scope, id);
 
         const lambda = new Function(this, 'Function', {
-            code: Code.fromAsset(path.resolve(__dirname, './'), {
-                exclude: ['*', '!lambda.js'],
-            }),
+            code: Code.fromAsset(path.resolve(__dirname, './../dist'), {}),
             handler: 'lambda.handler',
             timeout: Duration.seconds(30),
             logRetention: RetentionDays.ONE_MONTH,

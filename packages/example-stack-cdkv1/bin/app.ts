@@ -5,5 +5,5 @@ import {GitHubNotifierCdkConstructV1} from '../lib/GitHubNotifierCdkConstructV1'
 
 const app = new cdk.App();
 new GitHubNotifierCdkConstructV1(app, 'GitHubNotifierCdkConstructV1', {
-    env: {account: process.env.CDK_DEFAULT_ACCOUNT, region: 'us-east-1'},
+    env: {account: '176218606710', region: 'us-east-1'},
 });
