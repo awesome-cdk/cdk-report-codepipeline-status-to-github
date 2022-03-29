@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-and-release:
     runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -51,7 +51,7 @@ jobs:
 
   integration-test:
     runs-on: self-hosted
-#    needs: [ build ]
+#    needs: [ build-and-release ]
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
           run_install: true
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: arn:aws:iam::176218606710:role/GithubActionsAssumedRole
           aws-region: us-east-1
