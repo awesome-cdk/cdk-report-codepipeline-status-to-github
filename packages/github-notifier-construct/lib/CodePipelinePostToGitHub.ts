@@ -1,39 +1,47 @@
-import {Construct, Duration} from "@aws-cdk/core";
-import {IPipeline} from "@aws-cdk/aws-codepipeline";
-import {Code, Function, Runtime} from "@aws-cdk/aws-lambda";
-import {LambdaFunction} from "@aws-cdk/aws-events-targets";
-import {PolicyStatement} from "@aws-cdk/aws-iam";
-import {RetentionDays} from "@aws-cdk/aws-logs";
-import {IStringParameter} from "@aws-cdk/aws-ssm";
+import { Construct } from "constructs";
+import {
+  aws_codepipeline,
+  aws_lambda,
+  aws_events_targets,
+  aws_iam,
+  aws_logs,
+  aws_ssm,
+  Duration,
+} from "aws-cdk-lib";
 import * as path from "path";
 
 export class CodePipelinePostToGitHub extends Construct {
-
-    constructor(scope: Construct, id: string, private props: {
-        pipeline: IPipeline,
-        githubToken: IStringParameter,
-    }) {
-        super(scope, id);
-
-        const lambda = new Function(this, 'Function', {
-            code: Code.fromAsset(path.resolve(__dirname, './../dist'), {}),
-            handler: 'lambda.handler',
-            timeout: Duration.seconds(30),
-            logRetention: RetentionDays.ONE_MONTH,
-            runtime: Runtime.NODEJS_14_X,
-        });
-
-        // Allow the Lambda to query CodePipeline for more details on the build that triggered the event
-        lambda.addToRolePolicy(new PolicyStatement({
-            actions: ['codepipeline:GetPipelineExecution'],
-            resources: [this.props.pipeline.pipelineArn],
-        }));
-
-        // Allow the Lambda to post to a private GitHub API on behalf of the repo owner
-        lambda.addEnvironment('ACCESS_TOKEN', props.githubToken.stringValue);
-
-        this.props.pipeline.onStateChange('onStateChange', {
-            target: new LambdaFunction(lambda),
-        });
+  constructor(
+    scope: Construct,
+    id: string,
+    private props: {
+      pipeline: aws_codepipeline.IPipeline;
+      githubToken: aws_ssm.IStringParameter;
     }
+  ) {
+    super(scope, id);
+
+    const lambda = new aws_lambda.Function(this, "Function", {
+      code: aws_lambda.Code.fromAsset(path.resolve(__dirname, "./../dist"), {}),
+      handler: "lambda.handler",
+      timeout: Duration.seconds(30),
+      logRetention: aws_logs.RetentionDays.ONE_MONTH,
+      runtime: aws_lambda.Runtime.NODEJS_14_X,
+    });
+
+    // Allow the Lambda to query CodePipeline for more details on the build that triggered the event
+    lambda.addToRolePolicy(
+      new aws_iam.PolicyStatement({
+        actions: ["codepipeline:GetPipelineExecution"],
+        resources: [this.props.pipeline.pipelineArn],
+      })
+    );
+
+    // Allow the Lambda to post to a private GitHub API on behalf of the repo owner
+    lambda.addEnvironment("ACCESS_TOKEN", props.githubToken.stringValue);
+
+    this.props.pipeline.onStateChange("onStateChange", {
+      target: new aws_events_targets.LambdaFunction(lambda),
+    });
+  }
 }
