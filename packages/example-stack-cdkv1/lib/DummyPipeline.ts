@@ -1,53 +1,55 @@
-import {Construct, SecretValue} from "@aws-cdk/core";
-import {Artifact, Pipeline} from "@aws-cdk/aws-codepipeline";
-import {CodeBuildAction, GitHubSourceAction} from "@aws-cdk/aws-codepipeline-actions";
-import {BuildSpec, LinuxBuildImage, Project} from "@aws-cdk/aws-codebuild";
+import { Construct } from "constructs";
+import { aws_codepipeline, aws_codepipeline_actions, aws_codebuild, SecretValue } from "aws-cdk-lib";
 
 export class DummyPipeline extends Construct {
-    pipeline: Pipeline;
+  pipeline: aws_codepipeline.Pipeline;
 
-    constructor(scope: Construct, id: string, props: {
-        githubToken: string,
-    }) {
-        super(scope, id);
-
-        this.pipeline = new Pipeline(this, 'Pipeline', {crossAccountKeys: false});
-
-        const sourceArtifact = new Artifact();
-
-        this.pipeline.addStage({
-            stageName: "Source",
-            actions: [
-                new GitHubSourceAction({
-                    actionName: "Source",
-                    oauthToken: SecretValue.plainText(props.githubToken),
-                    output: sourceArtifact, owner: "awesome-cdk",
-                    repo: "cdk-report-codepipeline-status-to-github"
-                })
-            ],
-        });
-        this.pipeline.addStage({
-            stageName: "Test",
-            actions: [
-                new CodeBuildAction({
-                    input: sourceArtifact,
-                    actionName: "Test",
-                    project: new Project(this, 'CodeBuild/Project/Test', {
-                        environment: {buildImage: LinuxBuildImage.AMAZON_LINUX_2_ARM_2},
-                        buildSpec: BuildSpec.fromObject({
-                            version: '0.2',
-                            phases: {
-                                build: {
-                                    commands: [
-                                        'echo Dummy tests succeeded'
-                                    ],
-                                },
-                            },
-                        }),
-                    }),
-                })
-            ],
-        })
-
+  constructor(
+    scope: Construct,
+    id: string,
+    props: {
+      githubToken: string;
     }
+  ) {
+    super(scope, id);
+
+    this.pipeline = new aws_codepipeline.Pipeline(this, "Pipeline", { crossAccountKeys: false });
+
+    const sourceArtifact = new aws_codepipeline.Artifact();
+
+    this.pipeline.addStage({
+      stageName: "Source",
+      actions: [
+        new aws_codepipeline_actions.GitHubSourceAction({
+          actionName: "Source",
+          oauthToken: SecretValue.unsafePlainText(props.githubToken),
+          output: sourceArtifact,
+          owner: "awesome-cdk",
+          repo: "cdk-report-codepipeline-status-to-github",
+        }),
+      ],
+    });
+    this.pipeline.addStage({
+      stageName: "Test",
+      actions: [
+        new aws_codepipeline_actions.CodeBuildAction({
+          input: sourceArtifact,
+          actionName: "Test",
+          project: new aws_codebuild.Project(this, "CodeBuild/Project/Test", {
+            environment: {
+              buildImage: aws_codebuild.LinuxBuildImage.STANDARD_6_0,
+            },
+            buildSpec: aws_codebuild.BuildSpec.fromObject({
+              version: "0.2",
+              phases: {
+                build: {
+                  commands: ["echo Dummy tests succeeded"],
+                },
+              },
+            }),
+          }),
+        }),
+      ],
+    });
+  }
 }
