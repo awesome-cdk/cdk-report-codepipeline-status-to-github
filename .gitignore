@@ -1,2 +1,10 @@
 node_modules
 *.tgz
+.DS_Store
+cdk.out
+dist/
+*.js
+!jest.config.js
+*.d.ts
+*.d.ts.map
+*.js.map

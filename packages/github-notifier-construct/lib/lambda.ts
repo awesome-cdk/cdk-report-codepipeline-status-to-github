@@ -1,6 +1,7 @@
 import {CodePipelineCloudWatchPipelineHandler} from "aws-lambda";
-import axios from 'axios';
-import {CodePipeline} from 'aws-sdk';
+import {CodePipelineClient, GetPipelineExecutionCommand} from '@aws-sdk/client-codepipeline';
+
+const client = new CodePipelineClient({});
 
 export const handler: CodePipelineCloudWatchPipelineHandler = async (event) => {
     const region = event.region;
@@ -65,12 +66,10 @@ function createPayload(pipelineName: string, region: string, status: string) {
 }
 
 const getPipelineExecution = async (pipelineName: string, executionId: string) => {
-    const params = {
+    const result = await client.send(new GetPipelineExecutionCommand({
         pipelineName: pipelineName,
-        pipelineExecutionId: executionId
-    };
-
-    const result = await new CodePipeline().getPipelineExecution(params).promise();
+        pipelineExecutionId: executionId,
+    }));
     const artifactRevision = result?.pipelineExecution?.artifactRevisions?.find(() => true);
 
     const revisionURL = artifactRevision?.revisionUrl;
@@ -95,17 +94,19 @@ function buildCodePipelineUrl(pipelineName: string, region: string) {
     return `https://${region}.console.aws.amazon.com/codepipeline/home?region=${region}#/view/${pipelineName}`;
 }
 
-const postStatusToGitHub = async (owner: string | undefined, repository: string | undefined, sha: any, payload: any) => {
-    const url = `/${owner}/${repository}/statuses/${sha}`;
+const postStatusToGitHub = async (owner: string | undefined, repository: string | undefined, sha: string, payload: object) => {
+    const url = `https://api.github.com/repos/${owner}/${repository}/statuses/${sha}`;
 
-    await axios.post(url, payload, {
-        baseURL: 'https://api.github.com/repos',
+    const response = await fetch(url, {
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `token ${getPersonalAccessToken()}`,
         },
-        // @ts-ignore
-        auth: {
-            password: getPersonalAccessToken(),
-        },
+        body: JSON.stringify(payload),
     });
+
+    if (!response.ok) {
+        throw new Error(`GitHub API responded with ${response.status}: ${await response.text()}`);
+    }
 };
