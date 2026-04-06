@@ -13,6 +13,9 @@ reference architecture, proposed by AWS</a>, minus the SNS topic, since it's not
 
 <img src="https://d2908q01vomqb2.cloudfront.net/7719a1c782a1ba91c031a682a0a2f8658209adbf/2021/03/24/AWS-CodePipeline-external-status-1-1.png"/>
 
+<img width="1393" height="598" alt="image" src="https://github.com/user-attachments/assets/36112e2b-5b68-4481-ba0c-e278b5433e7f" />
+
+
 ### Migrating from v1 (CDK v1) to v2 (CDK v2)
 
 This package was rewritten for AWS CDK v2. If upgrading from an earlier version:
