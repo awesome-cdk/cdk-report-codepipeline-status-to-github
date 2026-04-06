@@ -3,4 +3,5 @@ import * as cdk from 'aws-cdk-lib';
 import {GitHubNotifierExampleStack} from '../lib/GitHubNotifierExampleStack';
 
 const app = new cdk.App();
-new GitHubNotifierExampleStack(app, 'E2ECodePipelineGitHubStatus');
+const stackName = app.node.tryGetContext('stackName') || 'E2ECodePipelineGitHubStatus';
+new GitHubNotifierExampleStack(app, stackName);

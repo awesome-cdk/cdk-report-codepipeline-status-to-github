@@ -16,7 +16,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXAMPLE_STACK_DIR="$SCRIPT_DIR/packages/example-stack"
 REPO_PREFIX="e2e-codepipeline-status"
-STACK_NAME="E2ECodePipelineGitHubStatus"
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+STACK_NAME="e2e-test-${TIMESTAMP}-cdk-construct-report-codepipeline-status-to-github"
 AWS_REGION="us-east-1"
 CLEANUP_ITEMS=()
 
@@ -45,6 +46,7 @@ cleanup() {
                 local stack="${item#stack:}"
                 echo "Destroying CDK stack: $stack"
                 (cd "$EXAMPLE_STACK_DIR" && CDK_DEFAULT_REGION="$AWS_REGION" npx cdk destroy "$stack" --force \
+                    -c "stackName=${stack}" \
                     -c githubToken=cleanup \
                     -c githubOwner=cleanup \
                     -c githubRepo=cleanup 2>/dev/null) || echo "  Stack destroy failed (may already be deleted)"
@@ -116,6 +118,7 @@ echo "Building construct..."
 
 echo "Deploying stack to $AWS_REGION..."
 (cd "$EXAMPLE_STACK_DIR" && CDK_DEFAULT_REGION="$AWS_REGION" npx cdk deploy "$STACK_NAME" \
+    -c "stackName=${STACK_NAME}" \
     -c "githubToken=${GITHUB_PAT}" \
     -c "githubOwner=${GH_USER}" \
     -c "githubRepo=${REPO_NAME}" \
