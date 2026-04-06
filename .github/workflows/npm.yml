@@ -9,6 +9,11 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -16,7 +21,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+
+      - name: Install latest npm
+        run: npm install -g npm@latest
 
       - uses: pnpm/action-setup@v4
         with:
@@ -26,8 +34,10 @@ jobs:
       - name: Build
         run: pnpm --filter @awesome-cdk/cdk-report-codepipeline-status-to-github run build
 
+      - name: Install semantic-release npm plugin
+        run: pnpm --filter @awesome-cdk/cdk-report-codepipeline-status-to-github exec npm install @semantic-release/npm@13.1.5
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm --filter @awesome-cdk/cdk-report-codepipeline-status-to-github exec npx semantic-release
