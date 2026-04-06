@@ -15,8 +15,5 @@
       "node_modules",
       "test"
     ]
-  },
-  "context": {
-    "aws-cdk:enableDiffNoFail": true
   }
 }

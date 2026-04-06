@@ -3,12 +3,9 @@ lib/**/*.js
 lib/**/*.d.ts
 lib/**/*.js.map
 lib/**/*.d.ts.map
-
-# Lambda bundle
-dist/
+bin/**/*.js
+bin/**/*.d.ts
 
 # CDK
 .cdk.staging
 cdk.out
-
-*.tgz
