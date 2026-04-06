@@ -29,6 +29,7 @@
   ],
   "author": "Dzhuneyt (https://dzhuneyt.com)",
   "files": [
+    "README.md",
     "lib/index.d.ts",
     "lib/index.js",
     "lib/CodePipelinePostToGitHub.d.ts",
