@@ -31,9 +31,6 @@ jobs:
       - name: Build
         run: pnpm --filter @awesome-cdk/cdk-report-codepipeline-status-to-github run build
 
-      - name: Install semantic-release npm plugin
-        run: pnpm --filter @awesome-cdk/cdk-report-codepipeline-status-to-github exec npm install @semantic-release/npm@13.1.5
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
