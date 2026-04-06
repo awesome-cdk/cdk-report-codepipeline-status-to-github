@@ -22,11 +22,11 @@ This package was rewritten for AWS CDK v2. If upgrading from an earlier version:
 - The public API (`CodePipelinePostToGitHub` class and its props) is unchanged
 
 ```diff
-- import {CodePipelinePostToGitHub} from "@awesome-cdk/cdk-report-codepipeline-status-to-github";
 - import {StringParameter} from "@aws-cdk/aws-ssm";
-+ import {CodePipelinePostToGitHub} from "@awesome-cdk/cdk-report-codepipeline-status-to-github";
 + import {StringParameter} from "aws-cdk-lib/aws-ssm";
 ```
+
+The same pattern applies to all other `@aws-cdk/*` imports (e.g. `@aws-cdk/aws-codepipeline` → `aws-cdk-lib/aws-codepipeline`).
 
 ### Requirements
 

@@ -17,6 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXAMPLE_STACK_DIR="$SCRIPT_DIR/packages/example-stack"
 REPO_PREFIX="e2e-codepipeline-status"
 STACK_NAME="E2ECodePipelineGitHubStatus"
+AWS_REGION="us-east-1"
 CLEANUP_ITEMS=()
 
 # --- Argument parsing ---
@@ -43,7 +44,7 @@ cleanup() {
             stack:*)
                 local stack="${item#stack:}"
                 echo "Destroying CDK stack: $stack"
-                (cd "$EXAMPLE_STACK_DIR" && npx cdk destroy "$stack" --force \
+                (cd "$EXAMPLE_STACK_DIR" && CDK_DEFAULT_REGION="$AWS_REGION" npx cdk destroy "$stack" --force \
                     -c githubToken=cleanup \
                     -c githubOwner=cleanup \
                     -c githubRepo=cleanup 2>/dev/null) || echo "  Stack destroy failed (may already be deleted)"
@@ -66,7 +67,7 @@ cleanup() {
             ssm:*)
                 local param="${item#ssm:}"
                 echo "Deleting SSM parameter: $param"
-                aws ssm delete-parameter --name "$param" --region us-east-1 2>/dev/null || true
+                aws ssm delete-parameter --name "$param" --region "$AWS_REGION" 2>/dev/null || true
                 ;;
         esac
     done
@@ -113,8 +114,8 @@ echo "=== Step 3: Deploy CDK stack ==="
 echo "Building construct..."
 (cd "$SCRIPT_DIR/packages/github-notifier-construct" && npm run build --silent)
 
-echo "Deploying stack..."
-(cd "$EXAMPLE_STACK_DIR" && npx cdk deploy "$STACK_NAME" \
+echo "Deploying stack to $AWS_REGION..."
+(cd "$EXAMPLE_STACK_DIR" && CDK_DEFAULT_REGION="$AWS_REGION" npx cdk deploy "$STACK_NAME" \
     -c "githubToken=${GITHUB_PAT}" \
     -c "githubOwner=${GH_USER}" \
     -c "githubRepo=${REPO_NAME}" \
@@ -137,7 +138,7 @@ echo ""
 echo "=== Step 4: Start CodePipeline ==="
 EXECUTION_ID=$(aws codepipeline start-pipeline-execution \
     --name "$PIPELINE_NAME" \
-    --region us-east-1 \
+    --region "$AWS_REGION" \
     --query 'pipelineExecutionId' \
     --output text)
 echo "Execution ID: $EXECUTION_ID"
@@ -148,7 +149,7 @@ for i in $(seq 1 12); do
     STATUS=$(aws codepipeline get-pipeline-execution \
         --pipeline-name "$PIPELINE_NAME" \
         --pipeline-execution-id "$EXECUTION_ID" \
-        --region us-east-1 \
+        --region "$AWS_REGION" \
         --query 'pipelineExecution.status' \
         --output text 2>&1) || true
 

@@ -83,9 +83,14 @@ const getPipelineExecution = async (pipelineName: string, executionId: string) =
     const pattern = /github.com\/(.+)\/(.+)\/commit\//;
     const matches = pattern.exec(revisionURL);
 
+    if (!matches || !matches[1] || !matches[2]) {
+        console.error('Could not parse owner/repo from revision URL:', revisionURL);
+        return;
+    }
+
     return {
-        owner: matches?.[1],
-        repository: matches?.[2],
+        owner: matches[1],
+        repository: matches[2],
         sha: sha
     };
 };

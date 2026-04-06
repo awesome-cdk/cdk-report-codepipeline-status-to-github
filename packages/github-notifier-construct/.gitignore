@@ -1,11 +1,14 @@
-!jest.config.js
+# TypeScript build output
+lib/**/*.js
+lib/**/*.d.ts
+lib/**/*.js.map
+lib/**/*.d.ts.map
 
-# CDK asset staging directory
+# Lambda bundle
+dist/
+
+# CDK
 .cdk.staging
 cdk.out
-!webpack.config.js
 
 *.tgz
-
-lib/*.d.ts
-lib/*.js

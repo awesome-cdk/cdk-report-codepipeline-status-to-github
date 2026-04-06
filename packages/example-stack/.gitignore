@@ -1,6 +1,11 @@
-*.js
-!*.d.ts
+# TypeScript build output
+lib/**/*.js
+lib/**/*.d.ts
+lib/**/*.js.map
+lib/**/*.d.ts.map
+bin/**/*.js
+bin/**/*.d.ts
 
-# CDK asset staging directory
+# CDK
 .cdk.staging
 cdk.out

@@ -8,6 +8,9 @@ importers:
 
   packages/example-stack:
     dependencies:
+      '@awesome-cdk/cdk-report-codepipeline-status-to-github':
+        specifier: workspace:*
+        version: link:../github-notifier-construct
       aws-cdk-lib:
         specifier: ^2.100.0
         version: 2.248.0(constructs@10.6.0)

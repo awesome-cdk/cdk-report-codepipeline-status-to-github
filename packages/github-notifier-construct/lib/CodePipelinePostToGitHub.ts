@@ -12,7 +12,7 @@ export class CodePipelinePostToGitHub extends Construct {
 
     constructor(scope: Construct, id: string, private props: {
         pipeline: IPipeline,
-        githubToken: IStringParameter,
+        githubToken: IStringParameter | string,
     }) {
         super(scope, id);
 
@@ -31,7 +31,10 @@ export class CodePipelinePostToGitHub extends Construct {
         }));
 
         // Allow the Lambda to post to a private GitHub API on behalf of the repo owner
-        lambda.addEnvironment('ACCESS_TOKEN', props.githubToken.stringValue);
+        const accessToken = typeof props.githubToken === 'string'
+            ? props.githubToken
+            : props.githubToken.stringValue;
+        lambda.addEnvironment('ACCESS_TOKEN', accessToken);
 
         this.props.pipeline.onStateChange('onStateChange', {
             target: new LambdaFunction(lambda),

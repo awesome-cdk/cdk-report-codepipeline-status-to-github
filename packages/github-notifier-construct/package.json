@@ -10,8 +10,8 @@
     "build": "npm run build:tsc && npm run build:lambda",
     "build:tsc": "npx tsc",
     "watch:tsc": "npx tsc --watch",
-    "build:lambda": "npx esbuild ./lib/lambda.ts --bundle --outfile=./dist/lambda.js --platform=node",
-    "watch:lambda": "npx esbuild ./lib/lambda.ts --bundle --outfile=./dist/lambda.js --platform=node --watch",
+    "build:lambda": "npx esbuild ./lib/lambda.ts --bundle --outfile=./dist/lambda.js --platform=node --target=node20 --external:@aws-sdk/*",
+    "watch:lambda": "npx esbuild ./lib/lambda.ts --bundle --outfile=./dist/lambda.js --platform=node --target=node20 --external:@aws-sdk/* --watch",
     "pack": "npm pack --pack-destination ../../",
     "dev": "npm run build && npm run pack"
   },

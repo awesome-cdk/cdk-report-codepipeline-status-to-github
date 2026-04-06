@@ -17,6 +17,7 @@
     "typescript": "~5.5.0"
   },
   "dependencies": {
+    "@awesome-cdk/cdk-report-codepipeline-status-to-github": "workspace:*",
     "aws-cdk-lib": "^2.100.0",
     "constructs": "^10.0.0"
   }
